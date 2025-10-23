@@ -101,6 +101,23 @@ git push -u origin main
 1. **Build Command 오류**: `requirements.txt` 파일이 올바른지 확인
 2. **Start Command 오류**: `uvicorn`이 설치되었는지 확인
 3. **포트 오류**: `$PORT` 환경 변수를 사용했는지 확인
+4. **pydantic-core 빌드 오류**: Rust 컴파일러 문제로 인한 오류가 발생할 수 있습니다
+
+### pydantic-core 빌드 오류 해결법
+만약 다음과 같은 오류가 발생한다면:
+```
+error: failed to create directory `/usr/local/cargo/registry/cache/...`
+Caused by: Read-only file system (os error 30)
+```
+
+**해결 방법:**
+1. `requirements.txt`에서 pydantic 버전을 더 낮춤 (현재 2.3.0으로 설정됨)
+2. 또는 pre-compiled wheel을 사용하도록 설정:
+```txt
+fastapi==0.103.2
+uvicorn==0.23.2
+pydantic==2.3.0
+```
 
 ### 로그 확인
 - Render 대시보드에서 "Logs" 탭으로 이동하여 오류 메시지 확인
