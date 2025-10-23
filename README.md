@@ -1,14 +1,22 @@
-# 🚀 FastAPI + Render 배포 가이드
+# 🚀 FastAPI + Railway 배포 가이드
 
-이 프로젝트는 FastAPI를 사용한 간단한 Python 웹 애플리케이션을 Render 플랫폼에 배포하는 방법을 보여줍니다.
+이 프로젝트는 FastAPI를 사용한 간단한 Python 웹 애플리케이션을 Railway 플랫폼에 배포하는 방법을 보여줍니다.
+
+## ✨ Railway의 장점
+
+- **🚀 빠른 배포**: GitHub 연동으로 자동 배포
+- **💤 슬립 모드 없음**: 무료 플랜에서도 24/7 실행
+- **⚡ 즉시 응답**: 첫 요청도 빠른 로딩
+- **🔧 간단한 설정**: 복잡한 설정 없이 바로 배포
+- **📊 실시간 로그**: 배포 과정을 실시간으로 확인
 
 ## 📋 프로젝트 구조
 
 ```
-fast-api-render/
+fast-api-railway/
 ├── main.py              # FastAPI 애플리케이션 메인 파일
 ├── requirements.txt     # Python 의존성 패키지 목록
-├── render.yaml         # Render 배포 설정 파일
+├── railway.json         # Railway 배포 설정 파일
 └── README.md           # 이 파일
 ```
 
@@ -41,7 +49,7 @@ python main.py
 - http://localhost:8000/docs - 자동 생성된 API 문서
 - http://localhost:8000/health - 헬스 체크
 
-## 🌐 Render에 배포하기
+## 🌐 Railway에 배포하기
 
 ### 1. GitHub에 코드 업로드
 1. GitHub에서 새 저장소 생성
@@ -54,31 +62,29 @@ git remote add origin https://github.com/yourusername/your-repo-name.git
 git push -u origin main
 ```
 
-### 2. Render 계정 생성 및 연결
-1. [Render.com](https://render.com)에 가입
+### 2. Railway 계정 생성 및 연결
+1. [Railway.app](https://railway.app)에 가입
 2. GitHub 계정과 연결
-3. "New +" 버튼 클릭 → "Web Service" 선택
+3. "New Project" 클릭 → "Deploy from GitHub repo" 선택
 
-### 3. 배포 설정
+### 3. 저장소 선택 및 배포
 1. **Repository**: GitHub 저장소 선택
-2. **Name**: `fastapi-app` (원하는 이름으로 변경 가능)
-3. **Environment**: `Python 3`
-4. **Build Command**: `pip install -r requirements.txt`
-5. **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-6. **Plan**: Free (무료 플랜 선택)
+2. **Deploy**: 자동으로 배포 시작
+3. **Domain**: Railway가 자동으로 도메인 생성
 
 ### 4. 환경 변수 설정 (선택사항)
-- Render 대시보드에서 "Environment" 탭으로 이동
+- Railway 대시보드에서 "Variables" 탭으로 이동
 - 필요한 환경 변수 추가 (현재는 불필요)
 
-### 5. 배포 시작
-- "Create Web Service" 버튼 클릭
-- 배포 과정이 자동으로 시작됩니다 (약 2-3분 소요)
+### 5. 배포 완료 확인
+- Railway 대시보드에서 "Deployments" 탭 확인
+- 배포 상태가 "SUCCESS"가 되면 완료
+- 제공된 URL로 접속 테스트
 
 ## ✅ 배포 확인
 
 배포가 완료되면:
-1. Render에서 제공하는 URL로 접속 (예: `https://your-app-name.onrender.com`)
+1. Railway에서 제공하는 URL로 접속 (예: `https://your-app-name.up.railway.app`)
 2. 다음 엔드포인트들이 정상 작동하는지 확인:
    - `/` - 메인 페이지
    - `/health` - 헬스 체크
@@ -98,55 +104,51 @@ git push -u origin main
 ## 🚨 문제 해결
 
 ### 배포 실패 시
-1. **Build Command 오류**: `requirements.txt` 파일이 올바른지 확인
+1. **Build 오류**: `requirements.txt` 파일이 올바른지 확인
 2. **Start Command 오류**: `uvicorn`이 설치되었는지 확인
 3. **포트 오류**: `$PORT` 환경 변수를 사용했는지 확인
-4. **pydantic-core 빌드 오류**: Rust 컴파일러 문제로 인한 오류가 발생할 수 있습니다
 
-### pydantic-core 빌드 오류 해결법
-만약 다음과 같은 오류가 발생한다면:
-```
-error: failed to create directory `/usr/local/cargo/registry/cache/...`
-Caused by: Read-only file system (os error 30)
-```
-
-**해결 방법 (단계별):**
-
-**1단계**: pydantic 1.x 버전 사용 (가장 안정적)
-```txt
-fastapi==0.95.2
-uvicorn==0.21.1
-pydantic==1.10.12
-```
-
-**2단계**: 만약 여전히 문제가 발생한다면, 더 낮은 버전 사용
-```txt
-fastapi==0.88.0
-uvicorn==0.20.0
-pydantic==1.9.2
-```
-
-**3단계**: 최후의 수단 - pre-compiled wheel 사용
-```txt
-fastapi==0.95.2
-uvicorn==0.21.1
-pydantic==1.10.12
---only-binary=all
-```
+### Railway 특화 문제 해결
+1. **배포 시간 초과**: Railway는 일반적으로 2-3분 내에 배포 완료
+2. **도메인 접속 불가**: 배포 완료 후 몇 분 더 기다려보세요
+3. **로그 확인**: Railway 대시보드에서 "Logs" 탭으로 이동
 
 ### 로그 확인
-- Render 대시보드에서 "Logs" 탭으로 이동하여 오류 메시지 확인
+- Railway 대시보드에서 "Logs" 탭으로 이동하여 오류 메시지 확인
+- 실시간 로그 스트리밍 지원
+
+## 💰 Railway 요금제
+
+### 무료 플랜
+- **월 $5 크레딧** (충분한 사용량)
+- **24/7 실행** (슬립 모드 없음)
+- **자동 HTTPS**
+- **커스텀 도메인**
+
+### 유료 플랜
+- **Pro Plan**: $20/월
+- **더 많은 리소스**
+- **우선 지원**
+
+## 🆚 다른 플랫폼과 비교
+
+| 플랫폼 | 무료 플랜 | 슬립 모드 | 배포 속도 | 설정 복잡도 |
+|--------|-----------|-----------|-----------|-------------|
+| **Railway** | ✅ | ❌ | ⚡ 빠름 | 🟢 간단 |
+| Render | ✅ | ⚠️ 있음 | 🐌 느림 | 🟡 보통 |
+| Heroku | ❌ | ❌ | ⚡ 빠름 | 🟡 보통 |
+| Fly.io | ✅ | ❌ | ⚡ 빠름 | 🔴 복잡 |
 
 ## 📚 추가 학습 자료
 
+- [Railway 공식 문서](https://docs.railway.app/)
 - [FastAPI 공식 문서](https://fastapi.tiangolo.com/)
-- [Render 공식 문서](https://render.com/docs)
 - [Python 가상환경 가이드](https://docs.python.org/3/tutorial/venv.html)
 
 ## 🎉 성공!
 
-배포가 완료되면 전 세계 어디서든 여러분의 FastAPI 애플리케이션에 접근할 수 있습니다!
+Railway로 배포하면 **슬립 모드 없이** 빠르고 안정적인 웹 애플리케이션을 운영할 수 있습니다!
 
 ---
 
-**💡 팁**: 무료 플랜에서는 15분간 비활성화 시 자동으로 슬립 모드로 전환됩니다. 첫 요청 시 약간의 지연이 있을 수 있습니다.
+**💡 팁**: Railway는 무료 플랜에서도 슬립 모드가 없어서 첫 요청도 빠르게 응답합니다. Render보다 훨씬 빠른 배포 경험을 제공합니다!
