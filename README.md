@@ -110,13 +110,28 @@ error: failed to create directory `/usr/local/cargo/registry/cache/...`
 Caused by: Read-only file system (os error 30)
 ```
 
-**해결 방법:**
-1. `requirements.txt`에서 pydantic 버전을 더 낮춤 (현재 2.3.0으로 설정됨)
-2. 또는 pre-compiled wheel을 사용하도록 설정:
+**해결 방법 (단계별):**
+
+**1단계**: pydantic 1.x 버전 사용 (가장 안정적)
 ```txt
-fastapi==0.103.2
-uvicorn==0.23.2
-pydantic==2.3.0
+fastapi==0.95.2
+uvicorn==0.21.1
+pydantic==1.10.12
+```
+
+**2단계**: 만약 여전히 문제가 발생한다면, 더 낮은 버전 사용
+```txt
+fastapi==0.88.0
+uvicorn==0.20.0
+pydantic==1.9.2
+```
+
+**3단계**: 최후의 수단 - pre-compiled wheel 사용
+```txt
+fastapi==0.95.2
+uvicorn==0.21.1
+pydantic==1.10.12
+--only-binary=all
 ```
 
 ### 로그 확인
